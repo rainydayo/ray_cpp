@@ -38,7 +38,6 @@ double vec3::length_squared() const {
 }
 
 bool vec3::near_zero() const {
-  // Return true if the vector is close to zero in all dimensions.
   double s = 1e-8;
   return (std::abs(e[0]) < s) && (std::abs(e[1]) < s) && (std::abs(e[2]) < s);
 }
@@ -111,6 +110,7 @@ vec3 cross(const vec3& u, const vec3& v) {
 
 vec3 unit_vector(vec3 v) {
   // TODO: Write the unit vector function
+  return vec3(0, 0, 0);
 }
 
 vec3 random_unit_vector() {
