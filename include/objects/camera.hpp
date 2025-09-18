@@ -13,6 +13,10 @@ public:
   int image_width = 100;
   int samples_per_pixel = 10;
   int max_depth = 10;
+  point3 look_from = point3(0, 0, 0);
+  point3 look_at = point3(0, 0, -1);
+  vec3 v_up = vec3(0, 1, 0);
+  double v_fov = 90.0;
 
   camera(std::string file_path): file_path(file_path) {}
   void render(const hittable& world);

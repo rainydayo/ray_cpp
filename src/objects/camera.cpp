@@ -34,22 +34,26 @@ void camera::render(const hittable& world) {
 }
 
 void camera::initialize() {
-  image_height = std::max(1, static_cast<int> (image_width / aspect_ratio));
+  image_height = std::max(1, static_cast<int>(image_width / aspect_ratio));
   pixel_samples_scale = 1.0 / samples_per_pixel;
-  camera_position = point3(0, 0, 0);
 
-  double focal_length = 1.0;
-  double viewport_height = 2.0;
-  double viewport_width = aspect_ratio * viewport_height;
+  // TODO: Initialize the camera parameters
+  double theta = 0.0;
+  double h = 0.0;
+  double viewport_height = 0.0;
+  double viewport_width = 0.0;
 
-  vec3 view_u = vec3(viewport_width, 0, 0);
-  vec3 view_v = vec3(0, -viewport_height, 0);
+  vec3 w = unit_vector(look_from - look_at);
+  vec3 u = unit_vector(cross(v_up, w));
+  vec3 v = cross(w, u);
 
-  pixel_delta_u = view_u / image_width;
-  pixel_delta_v = view_v / image_height;
-
-  vec3 view_upper_left_corner = camera_position - vec3(0, 0, focal_length) - view_u / 2 - view_v / 2;
-  upper_left_corner_pixel = view_upper_left_corner + 0.5 * (pixel_delta_u + pixel_delta_v);
+  camera_position = look_from;
+  vec3 horizontal = viewport_width * u;
+  vec3 vertical = viewport_height * v;
+  upper_left_corner_pixel = camera_position - w - horizontal / 2 + vertical / 2;
+  pixel_delta_u = horizontal / image_width;
+  pixel_delta_v = -vertical / image_height;
+  upper_left_corner_pixel += 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
 ray camera::get_ray(int i, int j) const {

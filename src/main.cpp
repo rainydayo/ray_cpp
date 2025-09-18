@@ -24,6 +24,7 @@ signed main() {
 
   camera cam("./images/out.ppm");
 
+  // adjust camera parameters here
   cam.aspect_ratio = 16.0 / 9.0;
   cam.image_width = 3024;
   cam.max_depth = 5;
