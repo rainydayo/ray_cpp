@@ -31,7 +31,7 @@ signed main() {
 
   cam.render(world);
 
-  std::cout << "Image rendered to ./images/out.ppm" << std::endl;
+  std::cout << "\nImage rendered to ./images/out.ppm" << std::endl;
   
   return 0;
 }

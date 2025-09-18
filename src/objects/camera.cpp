@@ -8,6 +8,7 @@
 #include <materials/base.hpp>
 
 #include <constants.hpp>
+#include <progress.hpp>
 #include <randomizer.hpp>
 
 // camera method definitions
@@ -19,6 +20,10 @@ void camera::render(const hittable& world) {
 
   file_out << "P3\n";
   file_out << image_width << " " << image_height << "\n" << 255 << "\n";
+
+  int total_pixels = image_width * image_height;
+  progress_bar progress(total_pixels);
+
   for(int i=0; i<image_height; ++i) {
     for(int j=0; j<image_width; ++j) {
       color pixel_color(0, 0, 0);
@@ -29,6 +34,8 @@ void camera::render(const hittable& world) {
 
       pixel_color = get_color_byte(pixel_samples_scale * pixel_color);
       file_out << pixel_color.x() << " " << pixel_color.y() << " " << pixel_color.z() << "\n";
+
+      progress.update();
     }
   }
 }
