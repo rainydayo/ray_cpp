@@ -9,6 +9,8 @@
 
 #include <materials/lambertian.hpp>
 #include <materials/metal.hpp>
+#include "materials/dielectric.cpp"
+#include "shapes/plane.cpp"
 
 int main() {
     hittable_list world;
@@ -22,6 +24,7 @@ int main() {
     auto mat_white = std::make_shared<lambertian>(color(0.9, 0.9, 0.9));    // white diffuse
     auto mat_metal = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);    // slightly fuzzy metal
     auto mat_ground = std::make_shared<lambertian>(color(0.11, 0.14, 0.22));
+    auto glass = std::make_shared<dielectric>(2.4);
 
     // Head
     world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.6, mat_brown));
@@ -38,8 +41,8 @@ int main() {
     world.add(std::make_shared<sphere>(point3(1.0, -0.2, -1), 0.35, mat_white));
 
     // Ground
-    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, mat_ground));
-
+    //world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, glass));
+    world.add(std::make_shared<plane>(-0.5, glass));
 
     camera cam("./images/out.ppm");
 
