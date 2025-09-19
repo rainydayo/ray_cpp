@@ -27,7 +27,7 @@ int main() {
     auto glass = std::make_shared<dielectric>(2.4);
 
     // Head
-    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.6, mat_brown));
+    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.6, glass));
 
     // Body
     world.add(std::make_shared<sphere>(point3(0, -0.9, -1), 0.9, mat_brown));
@@ -42,7 +42,7 @@ int main() {
 
     // Ground
     //world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, glass));
-    world.add(std::make_shared<plane>(-0.5, glass));
+    world.add(std::make_shared<plane>(-0.5, mat_ground));
 
     camera cam("./images/out.ppm");
 
