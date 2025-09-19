@@ -17,10 +17,29 @@ int main() {
     auto material_center = std::make_shared<lambertian>(color(0.9, 0.1, 0.1));
     auto material_side = std::make_shared<metal>(color(1.0, 1.0, 1.0), 0.0);
 
-    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5, material_center));
-    world.add(std::make_shared<sphere>(point3(1, 0, -1), 0.5, material_side));
-    world.add(std::make_shared<sphere>(point3(-1, 0, -1), 0.5, material_side));
-    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, material_ground));
+    // Materials
+    auto mat_brown = std::make_shared<lambertian>(color(0.65, 0.33, 0.22)); // brown diffuse
+    auto mat_white = std::make_shared<lambertian>(color(0.9, 0.9, 0.9));    // white diffuse
+    auto mat_metal = std::make_shared<metal>(color(0.8, 0.8, 0.8), 0.1);    // slightly fuzzy metal
+    auto mat_ground = std::make_shared<lambertian>(color(0.11, 0.14, 0.22));
+
+    // Head
+    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.6, mat_brown));
+
+    // Body
+    world.add(std::make_shared<sphere>(point3(0, -0.9, -1), 0.9, mat_brown));
+
+    // Ears
+    world.add(std::make_shared<sphere>(point3(-0.6, 0.6, -1), 0.25, mat_metal));
+    world.add(std::make_shared<sphere>(point3(0.6, 0.6, -1), 0.25, mat_metal));
+
+    // Arms
+    world.add(std::make_shared<sphere>(point3(-1.0, -0.2, -1), 0.35, mat_white));
+    world.add(std::make_shared<sphere>(point3(1.0, -0.2, -1), 0.35, mat_white));
+
+    // Ground
+    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100, mat_ground));
+
 
     camera cam("./images/out.ppm");
 
