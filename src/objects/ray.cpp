@@ -10,6 +10,5 @@ const vec3& ray::direction() const {
 }
 
 point3 ray::at(double t) const {
-  // TODO: Write the at function that computes the point along the ray at parameter t
-  return point3(0, 0, 0);
+    return orig + t * dir;
 }

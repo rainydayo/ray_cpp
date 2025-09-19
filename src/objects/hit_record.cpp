@@ -2,7 +2,6 @@
 
 // hit_record method definitions
 void hit_record::set_face_normal(const ray& r, const vec3& outward_normal) {
-  // TODO: Set the normal direction based on the ray direction and the outward normal
-
-  return ;
+    front_face = dot(r.direction(), outward_normal) < 0;
+    normal = front_face ? outward_normal : -outward_normal;
 }

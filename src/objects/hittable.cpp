@@ -17,14 +17,17 @@ void hittable_list::add(std::shared_ptr<hittable> object) {
 }
 
 bool hittable_list::hit(const ray& r, interval ray_interval, hit_record& rec) const {
-  hit_record temp_record;
-  bool hit_something = false;
-  double closest_position = ray_interval.max;
+    hit_record temp_record;
+    bool hit_something = false;
+    double closest_position = ray_interval.max;
 
-  for (const auto& object : objects) {
-    // TODO: Check if the ray hits the object, and update the hit record accordingly
-    
-  }
+    for (const auto& object : objects) {
+        if (object->hit(r, interval(ray_interval.min, closest_position), temp_record)) {
+            hit_something = true;
+            closest_position = temp_record.t;
+            rec = temp_record;
+        }
+    }
 
-  return hit_something;
+    return hit_something;
 }

@@ -97,21 +97,22 @@ vec3 operator/(vec3 v, double t) {
   return (1 / t) * v;
 }
 
-// vec3 utility functions
 double dot(const vec3& u, const vec3& v) {
-  // TODO: Write the dot product function
-  return 0.0;
+    return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
 }
 
 vec3 cross(const vec3& u, const vec3& v) {
-  // TODO: Write the cross product function
-  return vec3(0, 0, 0);
+    return vec3(
+        u[1] * v[2] - u[2] * v[1],
+        u[2] * v[0] - u[0] * v[2],
+        u[0] * v[1] - u[1] * v[0]
+    );
 }
 
 vec3 unit_vector(vec3 v) {
-  // TODO: Write the unit vector function
-  return vec3(0, 0, 0);
+    return v / v.length();
 }
+
 
 vec3 random_unit_vector() {
   while(true) {

@@ -1,5 +1,6 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <fstream>
+#include <cmath>
 
 #include <objects/camera.hpp>
 #include <objects/color.hpp>
@@ -10,6 +11,13 @@
 #include <constants.hpp>
 #include <progress.hpp>
 #include <randomizer.hpp>
+#include <corecrt_math_defines.h>
+
+
+
+inline double degrees_to_radians(double degrees) {
+    return degrees * M_PI / 180.0;
+}
 
 // camera method definitions
 void camera::render(const hittable& world) {
@@ -41,27 +49,30 @@ void camera::render(const hittable& world) {
 }
 
 void camera::initialize() {
-  image_height = std::max(1, static_cast<int>(image_width / aspect_ratio));
-  pixel_samples_scale = 1.0 / samples_per_pixel;
+    image_height = std::max(1, static_cast<int>(image_width / aspect_ratio));
+    pixel_samples_scale = 1.0 / samples_per_pixel;
+    double vfov = 90.0;   // default vertical FOV in degrees
+    // Vertical FOV → radians
+    double theta = degrees_to_radians(vfov);
+    double h = tan(theta / 2);
+    double viewport_height = 2.0 * h;
+    double viewport_width = aspect_ratio * viewport_height;
 
-  // TODO: Initialize the camera parameters
-  double theta = 0.0;
-  double h = 0.0;
-  double viewport_height = 0.0;
-  double viewport_width = 0.0;
+    // Camera basis
+    vec3 w = unit_vector(look_from - look_at);
+    vec3 u = unit_vector(cross(v_up, w));
+    vec3 v = cross(w, u);
 
-  vec3 w = unit_vector(look_from - look_at);
-  vec3 u = unit_vector(cross(v_up, w));
-  vec3 v = cross(w, u);
-
-  camera_position = look_from;
-  vec3 horizontal = viewport_width * u;
-  vec3 vertical = viewport_height * v;
-  upper_left_corner_pixel = camera_position - w - horizontal / 2 + vertical / 2;
-  pixel_delta_u = horizontal / image_width;
-  pixel_delta_v = -vertical / image_height;
-  upper_left_corner_pixel += 0.5 * (pixel_delta_u + pixel_delta_v);
+    // Position & viewport
+    camera_position = look_from;
+    vec3 horizontal = viewport_width * u;
+    vec3 vertical = viewport_height * v;
+    upper_left_corner_pixel = camera_position - w - horizontal / 2 + vertical / 2;
+    pixel_delta_u = horizontal / image_width;
+    pixel_delta_v = -vertical / image_height;
+    upper_left_corner_pixel += 0.5 * (pixel_delta_u + pixel_delta_v);
 }
+
 
 ray camera::get_ray(int i, int j) const {
   vec3 offset = sample_square();
@@ -78,7 +89,23 @@ vec3 camera::sample_square() const {
 }
 
 color camera::get_ray_color(const ray& r, int depth, const hittable& world) const {
-  // TODO: Write the ray color function with recursion for ray bouncing
+    if (depth <= 0) {
+        return color(0, 0, 0);
+    }
+    const double infinity = std::numeric_limits<double>::infinity();
 
-  return color(0, 0, 0);
+    hit_record rec;
+    if (world.hit(r, interval(0.001, infinity), rec)) {
+        ray scattered;
+        color attenuation;
+        if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * get_ray_color(scattered, depth - 1, world);
+        }
+        return color(0, 0, 0);
+    }
+
+    // Sky gradient background
+    vec3 unit_dir = unit_vector(r.direction());
+    auto t = 0.5 * (unit_dir.y() + 1.0);
+    return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
